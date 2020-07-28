@@ -3,7 +3,9 @@ package com.viztushar.stickers;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.orhanobut.hawk.Hawk;
 import com.viztushar.stickers.adapter.StickerAdapter;
 import com.viztushar.stickers.model.StickerModel;
@@ -24,8 +31,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.HttpHeaderParser;
+import uk.me.hardill.volley.multipart.MultipartRequest;
 
 public class MainActivity extends AppCompatActivity implements GetStickers.Callbacks {
+    RequestQueue requestQueue;
 
     public static final String EXTRA_STICKER_PACK_ID = "sticker_pack_id";
     public static final String EXTRA_STICKER_PACK_AUTHORITY = "sticker_pack_authority";
@@ -40,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     List<Sticker> mStickers;
     ArrayList<StickerModel> stickerModels = new ArrayList<>();
     RecyclerView recyclerView;
-    List<String> mEmojis,mDownloadFiles;
+    List<String> mEmojis, mDownloadFiles;
     String android_play_store_link;
     Toolbar toolbar;
 
@@ -48,13 +63,16 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         stickerPacks = new ArrayList<>();
-        path = getFilesDir() + "/" + " ";
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        // path= Environment.getExternalStorageDirectory().toString()+ "/" + " ";
+        path = getFilesDir() + "";
         mStickers = new ArrayList<>();
         stickerModels = new ArrayList<>();
         mEmojis = new ArrayList<>();
         mDownloadFiles = new ArrayList<>();
         mEmojis.add("");
         adapter = new StickerAdapter(this, stickerPacks);
+        isStoragePermissionGranted();
         getPermissions();
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
@@ -62,14 +80,18 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         recyclerView = findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
+       // new GetStickers(this, this, getResources().getString(R.string.json_link)).execute();
         new GetStickers(this, this, getResources().getString(R.string.json_link)).execute();
+
+       // http://sticker-admin.local.com:3000/api
     }
 
 
     public static void SaveImage(Bitmap finalBitmap, String name, String identifier) {
 
-        String root = path + "/" + identifier;
+ String root = path + "/" + identifier + "/";
+        //String root = path + "" + identifier+ "/";
+        Log.e("root is", root);
         File myDir = new File(root);
         myDir.mkdirs();
         String fname = name;
@@ -89,9 +111,11 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     public static void SaveTryImage(Bitmap finalBitmap, String name, String identifier) {
 
         String root = path + "/" + identifier;
+       // String root = path + "" + identifier;
+        //  File myDir = new File(root + "/" + "try");
         File myDir = new File(root + "/" + "try");
         myDir.mkdirs();
-        String fname = name.replace(".png","").replace(" ","_") + ".png";
+        String fname = name.replace(".png", "").replace(" ", "_") + ".png";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
         try {
@@ -131,21 +155,23 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                         JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                         Log.d(TAG, "onListLoaded: " + jsonChildNode.getString("name"));
                         stickerPacks.add(new StickerPack(
+
                                 jsonChildNode.getString("identifier"),
                                 jsonChildNode.getString("name"),
                                 jsonChildNode.getString("publisher"),
-                                getLastBitFromUrl(jsonChildNode.getString("tray_image_file")).replace(" ","_"),
+                                getLastBitFromUrl(jsonChildNode.getString("tray_image_file")).replace(" ", "_"),
                                 jsonChildNode.getString("publisher_email"),
                                 jsonChildNode.getString("publisher_website"),
                                 jsonChildNode.getString("privacy_policy_website"),
                                 jsonChildNode.getString("license_agreement_website")
+
                         ));
                         JSONArray stickers = jsonChildNode.getJSONArray("stickers");
                         Log.d(TAG, "onListLoaded: " + stickers.length());
                         for (int j = 0; j < stickers.length(); j++) {
                             JSONObject jsonStickersChildNode = stickers.getJSONObject(j);
                             mStickers.add(new Sticker(
-                                    getLastBitFromUrl(jsonStickersChildNode.getString("image_file")).replace(".png",".webp"),
+                                    getLastBitFromUrl(jsonStickersChildNode.getString("image_file")).replace(".png", ".webp"),
                                     mEmojis
                             ));
                             mDownloadFiles.add(jsonStickersChildNode.getString("image_file"));
@@ -153,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                         Log.d(TAG, "onListLoaded: " + mStickers.size());
                         Hawk.put(jsonChildNode.getString("identifier"), mStickers);
                         stickerPacks.get(i).setAndroidPlayStoreLink(android_play_store_link);
-                        stickerPacks.get(i).setStickers(Hawk.get(jsonChildNode.getString("identifier"),new ArrayList<Sticker>()));
+                        stickerPacks.get(i).setStickers(Hawk.get(jsonChildNode.getString("identifier"), new ArrayList<Sticker>()));
                         /*stickerModels.add(new StickerModel(
                                 jsonChildNode.getString("name"),
                                 mStickers.get(0).imageFileName,
@@ -184,4 +210,45 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     private static String getLastBitFromUrl(final String url) {
         return url.replaceFirst(".*/([^/?]+).*", "$1");
     }
+
+    public void isStoragePermissionGranted() {
+        String TAG = "Storage Permission";
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+            } else {
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
+        }
+    }
+
+
+  public void multi(){
+
+
+
+      /*
+      MultipartRequest request = new MultipartRequest(url, headers,
+              new Response.Listener<NetworkResponse>() {
+                  @Override
+                  public void onResponse(NetworkResponse response) {
+                  }
+              },
+              new Response.ErrorListener() {
+                  @Override
+                  public void onErrorResponse(VolleyError error) {
+                  }
+              });
+
+
+      request.addPart(new MultipartRequest.FormPart(fieldName,value));
+      request.addPart(new MultipartRequest.FilePart(fileFieldName, mimeType, fileName, data));
+      requestQueue.add(request);*/
+  }
+
+
 }

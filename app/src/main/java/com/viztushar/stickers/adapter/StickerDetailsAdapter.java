@@ -61,11 +61,20 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
                         .into(viewHolder.imageView);
             } else {
                 if (!strings.get(i).endsWith(".png")) {
-                    iStream = new FileInputStream( strings.get(i));
+                    iStream = new FileInputStream(strings.get(i));
+
                     Glide.with(context)
                             .asBitmap()
                             .load(getBytes(iStream))
                             .into(viewHolder.imageView);
+                } else {
+                    if (!strings.get(i).endsWith(".webp")) {
+                        iStream = new FileInputStream(strings.get(i));
+                        Glide.with(context)
+                                .asBitmap()
+                                .load(getBytes(iStream))
+                                   .into(viewHolder.imageView);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -80,7 +89,7 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
         return strings.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {

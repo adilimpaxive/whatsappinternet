@@ -105,7 +105,8 @@
             tools:ignore="ObsoleteLayoutParam"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:contentDescription="TODO" />
 
         <ProgressBar
             android:id="@+id/progressBar"

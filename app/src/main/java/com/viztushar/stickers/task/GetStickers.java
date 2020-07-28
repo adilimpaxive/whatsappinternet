@@ -32,9 +32,9 @@ public class GetStickers extends AsyncTask<Void, Void, Void> {
         try {
             URL urll =  new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urll.openConnection();
-
-            jsonResult = inputStreamToString(connection.getInputStream())
-                    .toString();
+            connection.setRequestProperty("x-jd-app-id", "com.viztushar.stickers");
+            connection.setRequestMethod("POST");
+            jsonResult = inputStreamToString(connection.getInputStream()).toString();
             Log.i("response", "doInBackground: " + jsonResult);
 
         } catch (IOException e){

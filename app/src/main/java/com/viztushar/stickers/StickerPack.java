@@ -14,7 +14,6 @@ public class StickerPack implements Parcelable {
     public final String publisherWebsite;
     public final String privacyPolicyWebsite;
     public final String licenseAgreementWebsite;
-
     public String iosAppStoreLink;
     private List<Sticker> stickers;
     private long totalSize;

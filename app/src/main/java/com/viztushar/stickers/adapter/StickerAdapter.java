@@ -61,11 +61,10 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, @SuppressLint("RecyclerView") final int i) {
         final List<Sticker> models = StickerPack.get(i).getStickers();
         viewHolder.name.setText(StickerPack.get(i).name);
-        final String url = "https://raw.githubusercontent.com/viztushar/Urban/master/thub5/";
+        final String url = "https://12dtechnology.com/uploads/8/";
         Glide.with(context)
                 .load(url + models.get(0).imageFileName.replace(".webp",".png"))
                 .into(viewHolder.imone);
-
         Glide.with(context)
                 .load(url + models.get(1).imageFileName.replace(".webp",".png"))
                 .into(viewHolder.imtwo);
@@ -84,7 +83,7 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
 
         Glide.with(context)
                 .asBitmap()
-                .load("https://googlechrome.github.io/samples/picture-element/images/" + StickerPack.get(i).trayImageFile.replace("_"," "))
+                .load("https://12dtechnology.com/uploads/8/" + StickerPack.get(i).trayImageFile.replace("_"," "))
                 .addListener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -117,7 +116,7 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
             }
         });
 
-        File file = new File(MainActivity.path + "/" + StickerPack.get(i).identifier + "/" + models.get(0).imageFileName);
+        File file = new File(MainActivity.path + "/" + StickerPack.get(i).identifier + "/"  +models.get(0).imageFileName);
         if (!file.exists()) {
             viewHolder.rl.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -140,7 +139,6 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
                                                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                                                         return false;
                                                     }
-
                                                     @Override
                                                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                                                         Bitmap bitmap1 = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);

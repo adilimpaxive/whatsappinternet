@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -172,10 +173,12 @@ public class StickerContentProvider extends ContentProvider {
     private AssetFileDescriptor fetchFile(@NonNull Uri uri, @NonNull AssetManager am, @NonNull String fileName, @NonNull String identifier) {
         try {
             File file;
-            if(fileName.endsWith(".png")){
-                file = new File(Objects.requireNonNull(getContext()).getFilesDir()+  "/" + "stickers_asset" + "/" + identifier + "/try/", fileName);
+          //if(fileName.endsWith(".png")){
+            String url = Environment.getExternalStorageDirectory().toString();
+          if(fileName.endsWith(".webp")||fileName.endsWith(".png")){
+                file = new File(Objects.requireNonNull(getContext())+url+  "/" + "stickers_asset" + "/" + identifier + "/try/", fileName);
             } else {
-                file = new File(Objects.requireNonNull(getContext()).getFilesDir()+  "/" + "stickers_asset" + "/" + identifier + "/", fileName);
+                file = new File(Objects.requireNonNull(getContext())+url +  "/" + "stickers_asset" + "/" + identifier + "/", fileName);
             }
             if (!file.exists()) {
                 Log.d("fetFile", "StickerPack dir not found");
@@ -228,6 +231,7 @@ public class StickerContentProvider extends ContentProvider {
     private Cursor getCursorForSingleStickerPack(@NonNull Uri uri) {
         final String identifier = uri.getLastPathSegment();
         for (StickerPack stickerPack : getStickerPackList()) {
+            assert identifier != null;
             if (identifier.equals(stickerPack.identifier)) {
                 return getStickerPackInfo(uri, Collections.singletonList(stickerPack));
             }
@@ -274,6 +278,7 @@ public class StickerContentProvider extends ContentProvider {
         final String identifier = uri.getLastPathSegment();
         MatrixCursor cursor = new MatrixCursor(new String[]{STICKER_FILE_NAME_IN_QUERY, STICKER_FILE_EMOJI_IN_QUERY});
         for (StickerPack stickerPack : getStickerPackList()) {
+            assert identifier != null;
             if (identifier.equals(stickerPack.identifier)) {
                 for (Sticker sticker : stickerPack.getStickers()) {
                     cursor.addRow(new Object[]{sticker.imageFileName, TextUtils.join(",", sticker.emojis)});

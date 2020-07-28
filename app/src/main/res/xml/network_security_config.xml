@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">sticker-admin.local.com:3000/api</domain>
+        <domain includeSubdomains="true">veoh.com</domain>
+        <domain includeSubdomains="true">dailymotion.com</domain>
+        <domain includeSubdomains="true">twitter.com</domain>
+        <domain includeSubdomains="true">linkedin.com</domain>
+        <domain includeSubdomains="true">facebook.com</domain>
+        <domain includeSubdomains="true">instagram.com</domain>
+        <domain includeSubdomains="true">youtube.com</domain>
+        <domain includeSubdomains="true">video.twimg.com</domain>
+        <domain includeSubdomains="true">instagram.fisb6-1.fna.fbcdn.net</domain>
+        <domain includeSubdomains="true">video.xx.fbcdn.net</domain>
+        <domain includeSubdomains="true">video.fisb6-1.fna.fbcdn.net</domain>
+
+
+
+
+    </domain-config>
+</network-security-config>
