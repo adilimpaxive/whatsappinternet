@@ -20,9 +20,10 @@
 
 package com.viztushar.stickers.task;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInstaller;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.os.Bundle;
 
 
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +69,7 @@ private Button mBtn,mBtnTwo,mBtnthree,mBtnFour,mBtnFive;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Checking for first time launch - before calling setContentView()
         session = new Session(this);
         if (!session.isFirstTimeLaunch()) {
@@ -106,6 +109,8 @@ private Button mBtn,mBtnTwo,mBtnthree,mBtnFour,mBtnFive;
         myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+        isReadStoragePermissionGranted();
+        isWriteStoragePermissionGranted();
 /*
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +233,6 @@ private Button mBtn,mBtnTwo,mBtnthree,mBtnFour,mBtnFive;
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             View view = layoutInflater.inflate(layouts[position], container, false);
             container.addView(view);
 
@@ -249,4 +253,72 @@ private Button mBtn,mBtnTwo,mBtnthree,mBtnFour,mBtnFive;
             container.removeView(view);
         }
     }
+
+    public void isReadStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v("TAG","Permission is granted1");
+            } else {
+
+                Log.v("TAG","Permission is revoked1");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("TAG","Permission is granted1");
+        }
+    }
+
+    public void isWriteStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v("TAG","Permission is granted2");
+            } else {
+
+                Log.v("TAG","Permission is revoked2");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("TAG","Permission is granted2");
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 2:
+                Log.d("TAG", "External storage2");
+                try {
+                    if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                        Log.v("TAG","Permission: "+permissions[0]+ "was "+grantResults[0]);
+                        //resume tasks needing this permission
+                        isWriteStoragePermissionGranted();
+                        isReadStoragePermissionGranted();
+
+                    }else{
+                        isWriteStoragePermissionGranted();
+                        isReadStoragePermissionGranted();
+                    }
+                }catch (Exception e){
+
+                }
+
+                break;
+
+            case 3:
+                Log.d("TAG", "External storage1");
+                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    Log.v("TAG","Permission: "+permissions[0]+ "was "+grantResults[0]);
+                    //resume tasks needing this permission
+
+                }else{
+                  isWriteStoragePermissionGranted();
+                }
+                break;
+        }
+    }
+
 }

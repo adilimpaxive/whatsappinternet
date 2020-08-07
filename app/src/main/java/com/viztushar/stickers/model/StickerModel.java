@@ -9,6 +9,11 @@ public class StickerModel {
     public String image_two;
     public String image_three;
     public String image_four;
+
+
+
+
+
     public List<String> downloadFile;
 
     public StickerModel(String stickerName, String image_one, String image_two, String image_three, String image_four, List<String> downloadFile) {
@@ -18,6 +23,11 @@ public class StickerModel {
         this.image_three = image_three;
         this.image_four = image_four;
         this.downloadFile = downloadFile;
+
+    }
+
+    public StickerModel() {
+
     }
 
     public String getStickerName() {
@@ -39,6 +49,8 @@ public class StickerModel {
     public String getImage_two() {
         return image_two;
     }
+
+
 
     public void setImage_two(String image_two) {
         this.image_two = image_two;

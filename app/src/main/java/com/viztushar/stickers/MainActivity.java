@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.orhanobut.hawk.Hawk;
+import com.viztushar.models.StoreVatiables;
 import com.viztushar.stickers.adapter.StickerAdapter;
 import com.viztushar.stickers.model.StickerModel;
 import com.viztushar.stickers.task.GetStickers;
@@ -56,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     ArrayList<StickerModel> stickerModels = new ArrayList<>();
     RecyclerView recyclerView;
     List<String> mEmojis, mDownloadFiles;
-    String android_play_store_link;
-    Toolbar toolbar;
+   private String android_play_store_link;
+    private Toolbar toolbar;
+   private  String _identifier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,9 +156,12 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                     for (int i = 0; i < jsonMainNode.length(); i++) {
                         JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                         Log.d(TAG, "onListLoaded: " + jsonChildNode.getString("name"));
+
+                        StoreVatiables storevariables=new StoreVatiables();
                         stickerPacks.add(new StickerPack(
 
-                                jsonChildNode.getString("identifier"),
+                               _identifier= jsonChildNode.getString("identifier"),
+
                                 jsonChildNode.getString("name"),
                                 jsonChildNode.getString("publisher"),
                                 getLastBitFromUrl(jsonChildNode.getString("tray_image_file")).replace(" ", "_"),
@@ -165,7 +170,10 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
                                 jsonChildNode.getString("privacy_policy_website"),
                                 jsonChildNode.getString("license_agreement_website")
 
+
                         ));
+
+                        storevariables.setNum(_identifier);
                         JSONArray stickers = jsonChildNode.getJSONArray("stickers");
                         Log.d(TAG, "onListLoaded: " + stickers.length());
                         for (int j = 0; j < stickers.length(); j++) {

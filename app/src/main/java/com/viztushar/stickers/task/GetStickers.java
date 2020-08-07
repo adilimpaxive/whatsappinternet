@@ -35,8 +35,8 @@ public class GetStickers extends AsyncTask<Void, Void, Void> {
             connection.setRequestProperty("x-jd-app-id", "com.viztushar.stickers");
             connection.setRequestMethod("POST");
             jsonResult = inputStreamToString(connection.getInputStream()).toString();
-            Log.i("response", "doInBackground: " + jsonResult);
 
+            Log.i("response", "doInBackground: " + jsonResult);
         } catch (IOException e){
             e.printStackTrace();
         }

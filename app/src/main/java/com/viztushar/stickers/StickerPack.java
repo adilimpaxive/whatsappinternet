@@ -48,6 +48,7 @@ public class StickerPack implements Parcelable {
         publisherWebsite = in.readString();
         privacyPolicyWebsite = in.readString();
         licenseAgreementWebsite = in.readString();
+        identifier=in.readString();
         iosAppStoreLink = in.readString();
         stickers = in.createTypedArrayList(Sticker.CREATOR);
         totalSize = in.readLong();

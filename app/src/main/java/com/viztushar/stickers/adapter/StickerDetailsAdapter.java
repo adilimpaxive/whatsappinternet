@@ -15,6 +15,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.viztushar.stickers.R;
+import com.viztushar.stickers.model.StickerModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -51,45 +52,33 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
                 .priority(Priority.HIGH)
                 .dontAnimate()
                 .dontTransform();
-        try {
-            Log.d("adapter 2", "onBindViewHolder: " + strings.get(i));
-            if (strings.get(i).endsWith(".jpg")) {
+        Log.d("adapter 2", "onBindViewHolder: " + strings.get(i));
+        if (strings.get(i).endsWith(".jpg")) {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(Uri.parse(strings.get(i)))
+                    .apply(new RequestOptions().override(512, 512))
+                    .into(viewHolder.imageView);
+        } else {
+            if (!strings.get(i).endsWith(".png")) {
+               // Log.d("png :"+iStream, "onBindViewHolder: " + strings.get(i));
+               // iStream = new FileInputStream( strings.get(i));
+                StickerModel stickerModel=new StickerModel();
+                String fnamei = ("https://12dtechnology.com/uploads/9/")+strings.get(i).replace(".webp", "").replace(" ", "_") + ".png";
+                Log.d("Getting_png :"+iStream, "onBindViewHolder: " + strings.get(i));
                 Glide.with(context)
                         .asBitmap()
-                        .load(Uri.parse(strings.get(i)))
-                        .apply(new RequestOptions().override(512, 512))
+                        .load((fnamei))
                         .into(viewHolder.imageView);
-            } else {
-                if (!strings.get(i).endsWith(".png")) {
-                    iStream = new FileInputStream(strings.get(i));
-
-                    Glide.with(context)
-                            .asBitmap()
-                            .load(getBytes(iStream))
-                            .into(viewHolder.imageView);
-                } else {
-                    if (!strings.get(i).endsWith(".webp")) {
-                        iStream = new FileInputStream(strings.get(i));
-                        Glide.with(context)
-                                .asBitmap()
-                                .load(getBytes(iStream))
-                                   .into(viewHolder.imageView);
-                    }
-                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
-
     }
-
     @Override
     public int getItemCount() {
         return strings.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -102,7 +91,6 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         int bufferSize = 1024;
         byte[] buffer = new byte[bufferSize];
-
         int len = 0;
         while ((len = inputStream.read(buffer)) != -1) {
             byteBuffer.write(buffer, 0, len);

@@ -28,6 +28,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.viztushar.models.StoreVatiables;
 import com.viztushar.stickers.MainActivity;
 import com.viztushar.stickers.R;
 import com.viztushar.stickers.Sticker;
@@ -41,7 +42,7 @@ import java.util.List;
 import static com.viztushar.stickers.MainActivity.EXTRA_STICKERPACK;
 
 public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
-
+    StoreVatiables storeVatiables=new StoreVatiables();
     Context context;
     ArrayList<StickerPack> StickerPack;
 
@@ -61,7 +62,10 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, @SuppressLint("RecyclerView") final int i) {
         final List<Sticker> models = StickerPack.get(i).getStickers();
         viewHolder.name.setText(StickerPack.get(i).name);
-        final String url = "https://12dtechnology.com/uploads/8/";
+        final String url = "https://12dtechnology.com/uploads/"+storeVatiables.getNum()+"/";
+
+        Glide.with(context).load(url+models.get(0)).into(viewHolder.imone);
+
         Glide.with(context)
                 .load(url + models.get(0).imageFileName.replace(".webp",".png"))
                 .into(viewHolder.imone);
@@ -77,13 +81,19 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
             Glide.with(context)
                     .load(url + models.get(3).imageFileName.replace(".webp",".png"))
                     .into(viewHolder.imfour);
+        }
+
+        if (models.size() > 4) {
+            Glide.with(context)
+                    .load(url + models.get(i).imageFileName.replace(".webp",".png"))
+                    .into(viewHolder.imfour);
         } else {
             viewHolder.imfour.setVisibility(View.INVISIBLE);
         }
 
         Glide.with(context)
                 .asBitmap()
-                .load("https://12dtechnology.com/uploads/8/" + StickerPack.get(i).trayImageFile.replace("_"," "))
+                .load("https://12dtechnology.com/uploads/9/" + StickerPack.get(i).trayImageFile.replace("_"," "))
                 .addListener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
