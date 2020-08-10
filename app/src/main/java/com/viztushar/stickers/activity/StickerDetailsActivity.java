@@ -92,6 +92,7 @@ public class StickerDetailsActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPack.name);
                 try {
                     startActivityForResult(intent, ADD_PACK);
+
                 } catch (ActivityNotFoundException e) {
                     Log.e("sdg",e.toString());
                     Toast.makeText(StickerDetailsActivity.this, "error"+e.toString(), Toast.LENGTH_LONG).show();

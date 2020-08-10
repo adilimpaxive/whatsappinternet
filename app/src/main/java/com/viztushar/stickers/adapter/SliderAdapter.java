@@ -51,7 +51,7 @@ public class SliderAdapter extends PagerAdapter {
        /* heading.setText(headings[position]);
         bottom.setText(descriptions[position]);
 */
-        container.addView(v);
+       container.addView(v);
 
         return v;
     }

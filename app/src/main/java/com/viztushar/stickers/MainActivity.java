@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.android.volley.AuthFailureError;
@@ -66,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         super.onCreate(savedInstanceState);
         stickerPacks = new ArrayList<>();
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        // path= Environment.getExternalStorageDirectory().toString()+ "/" + " ";
-        path = getFilesDir() + "";
+    path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/";
+      //  path = getFilesDir() + "";
         mStickers = new ArrayList<>();
         stickerModels = new ArrayList<>();
         mEmojis = new ArrayList<>();
@@ -89,9 +90,47 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
     }
 
 
+
+
+
+
+    public void saveImageToExternalStorage(Bitmap image) {
+        String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/directoryName";
+        try
+        {
+            File dir = new File(fullPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            OutputStream fOut = null;
+            File file = new File(fullPath, "image.png");
+            if(file.exists())
+                file.delete();
+            file.createNewFile();
+            fOut = new FileOutputStream(file);
+            // 100 means no compression, the lower you go, the stronger the compression
+            image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        }
+        catch (Exception e)
+        {
+            Log.e("saveToExternalStorage()", e.getMessage());
+        }
+    }
+
+
+
+
     public static void SaveImage(Bitmap finalBitmap, String name, String identifier) {
 
- String root = path + "/" + identifier + "/";
+      //  String root = Environment.getExternalStorageDirectory().toString();
+
+
+
+
+
+        String root = path + "/" + identifier + "/";
         //String root = path + "" + identifier+ "/";
         Log.e("root is", root);
         File myDir = new File(root);
@@ -101,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.WEBP, 90, out);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
 

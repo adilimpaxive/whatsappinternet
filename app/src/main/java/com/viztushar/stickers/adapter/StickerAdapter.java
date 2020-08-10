@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -36,6 +38,8 @@ import com.viztushar.stickers.StickerPack;
 import com.viztushar.stickers.activity.StickerDetailsActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +66,7 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, @SuppressLint("RecyclerView") final int i) {
         final List<Sticker> models = StickerPack.get(i).getStickers();
         viewHolder.name.setText(StickerPack.get(i).name);
-        final String url = "https://12dtechnology.com/uploads/"+storeVatiables.getNum()+"/";
+        final String url = "https://12dtechnology.com/uploads/9"+"/";
 
         Glide.with(context).load(url+models.get(0)).into(viewHolder.imone);
 
@@ -126,8 +130,24 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
             }
         });
 
-        File file = new File(MainActivity.path + "/" + StickerPack.get(i).identifier + "/"  +models.get(0).imageFileName);
+      //  File file = new File(MainActivity.path + "/" + StickerPack.get(i).identifier + "/"  +models.get(0).imageFileName);
+      /*  String root = Environment.getExternalStorageDirectory().toString();
+
+        File file = new File(root+"/WhatsappStickers/");
+
+
+      //  file.mkdirs();
+        //String root = Objects.requireNonNull(context.getExternalFilesDir("/")).getAbsolutePath();
+        //  File outputPath = new File(root+"/Speak And Translate");
+
+        // File outputPath = new File(Environment.getExternalStorageDirectory(), folder_main);
         if (!file.exists()) {
+            boolean x = file.mkdirs();
+            Log.d("pathFile", "result " + x);
+        }
+*/
+
+
             viewHolder.rl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -144,7 +164,7 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
                                                 .asBitmap()
                                                 .apply(new RequestOptions().override(512, 512))
                                                 .load(url + s.imageFileName.replace(".webp",".png"))
-                                                .addListener(new RequestListener<Bitmap>() {
+                                           .addListener(new RequestListener<Bitmap>() {
                                                     @Override
                                                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                                                         return false;
@@ -173,9 +193,9 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
 
                 }
             });
-        } else {
+      /*else {
             viewHolder.rl.setVisibility(View.INVISIBLE);
-        }
+        }*/
 
     }
 
@@ -206,4 +226,33 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
             rl = itemView.findViewById(R.id.download_layout);
         }
     }
+
+
+
+
+    public void saveImageToExternalStorage(Bitmap image) {
+        String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/directoryName";
+        try
+        {
+            File dir = new File(fullPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            OutputStream fOut = null;
+            File file = new File(fullPath, "image.png");
+            if(file.exists())
+                file.delete();
+            file.createNewFile();
+            fOut = new FileOutputStream(file);
+            // 100 means no compression, the lower you go, the stronger the compression
+            image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        }
+        catch (Exception e)
+        {
+            Log.e("saveToExternalStorage()", e.getMessage());
+        }
+    }
+
 }
