@@ -64,17 +64,22 @@ public class StickerDetailsActivity extends AppCompatActivity {
     //path = getFilesDir() + "/" + "stickers_asset" + "/" + stickerPack.identifier + "/";
       //  path = Environment.getExternalStorageDirectory().toString() + "/" + "";
 
-
-        path = Environment.getExternalStorageDirectory().toString() + "/" + "stickers_asset" + "/" + stickerPack.identifier+ "/" ;
+        path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/"+ stickerPack.identifier+ "/";
+      //  path = Environment.getExternalStorageDirectory().toString() + "/" + "stickers_asset" + "/" + stickerPack.identifier+ "/" ;
        // path =getFilesDir()+  "/" + stickerPack.identifier + "/"+ "try"+ "/";
         File file = new File(path + stickers.get(0).imageFileName);
         Log.d(TAG, "onCreate: " +path + stickers.get(0).imageFileName);
         for (Sticker s : stickers) {
-            if (!file.exists()) {
+            if (!(file ==null))
+            {
+
+                strings.add(s.imageFileName);
+            }
+            /*    if (!file.exists()) {
                 strings.add(s.imageFileName);
             } else {
                 strings.add(path + s.imageFileName);
-            } }
+            } */}
         adapter = new StickerDetailsAdapter(strings, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(gridLayoutManager);

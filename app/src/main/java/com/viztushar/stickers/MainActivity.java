@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
 
 
 
-        String root = path + "/" + identifier + "/";
+        String root = path + identifier + "/";
         //String root = path + "" + identifier+ "/";
         Log.e("root is", root);
         File myDir = new File(root);

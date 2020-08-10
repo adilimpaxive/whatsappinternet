@@ -95,6 +95,7 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
         while ((len = inputStream.read(buffer)) != -1) {
             byteBuffer.write(buffer, 0, len);
         }
+
         return byteBuffer.toByteArray();
     }
 }
