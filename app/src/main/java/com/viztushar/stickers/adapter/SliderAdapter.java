@@ -21,7 +21,7 @@ public class SliderAdapter extends PagerAdapter {
             R.drawable.t_one,R.drawable.t_two,R.drawable.t_three,R.drawable.t_four,R.drawable.t_five
     };
     private String [] headings={
-            "EAT","CODE","SLEEP"
+            "EA T","CODE","SLEEP"
     };
 
     private String [] descriptions={

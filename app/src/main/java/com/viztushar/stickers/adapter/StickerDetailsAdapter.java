@@ -2,6 +2,7 @@ package com.viztushar.stickers.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +19,9 @@ import com.viztushar.stickers.R;
 import com.viztushar.stickers.model.StickerModel;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -53,7 +56,14 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
                 .dontAnimate()
                 .dontTransform();
         Log.d("adapter 2", "onBindViewHolder: " + strings.get(i));
-        if (strings.get(i).endsWith(".jpg")) {
+  // String  path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/9/";
+        File folder = new File(Environment.getExternalStorageDirectory().toString() + "/WhatsappStickers/"+"8/");
+
+
+
+
+
+      /*  if (strings.get(i).endsWith(".jpg")) {
             Glide.with(context)
                     .asBitmap()
                     .load(Uri.parse(strings.get(i)))
@@ -70,6 +80,35 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
                         .asBitmap()
                         .load((fnamei))
                         .into(viewHolder.imageView);
+            }
+        }*/
+    }
+
+
+/*    public void iterator(File folder){
+
+        if(folder.exists())
+            File[] allFiles = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"));
+                }
+            }
+
+
+
+    }*/
+
+
+    public void traverse (File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            for (int i = 0; i < files.length; ++i) {
+                File file = files[i];
+                if (file.isDirectory()) {
+                    traverse(file);
+                } else {
+                    // do something here with the file
+                }
             }
         }
     }

@@ -124,6 +124,7 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 context.startActivity(new Intent(context, StickerDetailsActivity.class)
+
                                 .putExtra(EXTRA_STICKERPACK, StickerPack.get(viewHolder.getAdapterPosition())),
                         ActivityOptionsCompat.makeScaleUpAnimation(v, (int) v.getX(), (int) v.getY(), v.getWidth(),
                                 v.getHeight()).toBundle());
