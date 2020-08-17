@@ -21,6 +21,7 @@ import com.viztushar.stickers.model.StickerModel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,13 +58,11 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
                 .dontTransform();
         Log.d("adapter 2", "onBindViewHolder: " + strings.get(i));
   // String  path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/9/";
-        File folder = new File(Environment.getExternalStorageDirectory().toString() + "/WhatsappStickers/"+"8/");
+        File folder = new File(Environment.getExternalStorageDirectory().toString() + "/WhatsappStickers/"+"9/");
 
+//traverse(folder);
 
-
-
-
-      /*  if (strings.get(i).endsWith(".jpg")) {
+        if (strings.get(i).endsWith(".jpg")) {
             Glide.with(context)
                     .asBitmap()
                     .load(Uri.parse(strings.get(i)))
@@ -71,32 +70,41 @@ public class StickerDetailsAdapter extends RecyclerView.Adapter<StickerDetailsAd
                     .into(viewHolder.imageView);
         } else {
             if (!strings.get(i).endsWith(".png")) {
-               // Log.d("png :"+iStream, "onBindViewHolder: " + strings.get(i));
-               // iStream = new FileInputStream( strings.get(i));
+   Log.d("png :"+iStream, "onBindViewHolder: " + strings.get(i));
+                try {
+                    iStream = new FileInputStream( strings.get(i));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 StickerModel stickerModel=new StickerModel();
-                String fnamei = ("https://12dtechnology.com/uploads/9/")+strings.get(i).replace(".webp", "").replace(" ", "_") + ".png";
+                //String fnamei = ("https://12dtechnology.com/uploads/9/")+strings.get(i).replace(".webp", "").replace(" ", "_") + ".png";
+                String fnamei = folder+strings.get(i).replace(".webp", "").replace(" ", "_") + ".png";
+
                 Log.d("Getting_png :"+iStream, "onBindViewHolder: " + strings.get(i));
                 Glide.with(context)
                         .asBitmap()
                         .load((fnamei))
                         .into(viewHolder.imageView);
             }
-        }*/
+        }
     }
 
 
-/*    public void iterator(File folder){
+   /*
+    public void iterator(File folder){
+
 
         if(folder.exists())
             File[] allFiles = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"));
                 }
-            }
+            });
 
 
+    }
+*/
 
-    }*/
 
 
     public void traverse (File dir) {

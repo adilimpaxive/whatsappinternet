@@ -105,7 +105,8 @@ private ImageView mSplash;
                 back.setText("");
                 next.setText("Next");
             }else if (position==dots.length-1){
-                back.setEnabled(true); next.setEnabled(true);
+                back.setEnabled(true);
+                next.setEnabled(true);
                 back.setVisibility(View.VISIBLE);
                 back.setText("Back");
                 next.setText("Finish");

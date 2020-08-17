@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         super.onCreate(savedInstanceState);
         stickerPacks = new ArrayList<>();
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-    path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/";
+        path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/";
       //  path = getFilesDir() + "";
         mStickers = new ArrayList<>();
         stickerModels = new ArrayList<>();
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
         new GetStickers(this, this, getResources().getString(R.string.json_link)).execute();
 
        // http://sticker-admin.local.com:3000/api
+
+
+
+
+
     }
 
 
@@ -118,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements GetStickers.Callb
             Log.e("saveToExternalStorage()", e.getMessage());
         }
     }
-
 
 
 
