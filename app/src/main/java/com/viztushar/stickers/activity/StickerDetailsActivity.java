@@ -64,7 +64,9 @@ public class StickerDetailsActivity extends AppCompatActivity {
     //path = getFilesDir() + "/" + "stickers_asset" + "/" + stickerPack.identifier + "/";
       //  path = Environment.getExternalStorageDirectory().toString() + "/" + "";
 
-        path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/"+ stickerPack.identifier+ "/";
+       // path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/"+ stickerPack.identifier+ "/";
+        path= Environment.getExternalStorageDirectory().toString()+ "/WhatsappStickers/" + "9/";
+        Log.e("path is ",path);
       //  path = Environment.getExternalStorageDirectory().toString() + "/" + "stickers_asset" + "/" + stickerPack.identifier+ "/" ;
        // path =getFilesDir()+  "/" + stickerPack.identifier + "/"+ "try"+ "/";
         File file = new File(path + stickers.get(0).imageFileName);
@@ -74,7 +76,7 @@ public class StickerDetailsActivity extends AppCompatActivity {
             {
 
                 strings.add(s.imageFileName);
-                Log.wtf("mg",s.imageFileName);
+                //Log.wtf("mg",s.imageFileName);
             }
                 }
         adapter = new StickerDetailsAdapter(strings, this);
